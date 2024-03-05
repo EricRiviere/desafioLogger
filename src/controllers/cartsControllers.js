@@ -97,7 +97,6 @@ export const purchaseController = async (req, res) => {
       .findOne({ purchaser: user.email })
       .sort({ purchase_dateTime: -1 })
       .limit(1);
-    console.log(ticket);
 
     await sendEmailWithTicket(user.email, ticket);
     res.json(cart);
