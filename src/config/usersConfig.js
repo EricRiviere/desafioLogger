@@ -47,9 +47,6 @@ const initializePassport = () => {
           //User existance in DB validation
           const user = await userModel.findOne({ email: profile._json.email });
           if (!user) {
-            logger.warn(
-              "User doesn't exists with email: " + profile._json.email
-            );
             let newUser = {
               first_name: profile._json.name,
               last_name: "",

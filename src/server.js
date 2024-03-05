@@ -12,13 +12,10 @@ import initializePassport from "./config/usersConfig.js";
 import { ProductRouter } from "./routes/api/products.routes.js";
 import { CartsRouter } from "./routes/api/carts.routes.js";
 import { viewsRouter } from "./routes/views/views.routes.js";
-import { adminRouter } from "./routes/views/admin.views.routes.js";
 import ticketRouter from "./routes/api/tickets.routes.js";
 import emailRouter from "./routes/api/email.routes.js";
 import usersRouter from "./routes/api/users.routes.js";
-import userViewRouter from "./routes/views/users.views.routes.js";
 import jwtRouter from "./routes/api/jwt.routes.js";
-import githubLoginViewsRouter from "./routes/views/github-login.views.routes.js";
 import actionsRouter from "./routes/api/users.actions.routes.js";
 import loggerRouter from "./routes/api/logger.routes.js";
 
@@ -107,9 +104,6 @@ app.use("/api/loggerTest", loggerRouter);
 
 //ViewRouter
 app.use("/", viewsRouter);
-app.use("/users", userViewRouter);
-app.use("/github", githubLoginViewsRouter);
-app.use("/admin", adminRouter);
 
 //Socket
 io.on("connection", (socket) => {

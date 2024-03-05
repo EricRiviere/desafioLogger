@@ -1,20 +1,8 @@
 import { cartService } from "../services/service.js";
 import userModel from "../services/dao/models/user.model.js";
-import nodemailer from "nodemailer";
-import config from "../config/config.js";
 import __dirname from "../utils/path.js";
 import ticketModel from "../services/dao/models/ticket.model.js";
-import logger from "../utils/logger.js";
-
-//Transport config
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  port: 587,
-  auth: {
-    user: config.gmailAccount,
-    pass: config.gmailAppPassword,
-  },
-});
+import { sendEmailWithTicket } from "../utils/email.js";
 
 export const getCartsController = async (req, res) => {
   try {
@@ -105,41 +93,15 @@ export const purchaseController = async (req, res) => {
     let cid = req.params.cid;
     let cart = await cartService.purchase(cid);
     const user = await userModel.findById(cart.userId);
-    let ticket = await ticketModel.findOne({ purchaser: user.email });
+    let ticket = await ticketModel
+      .findOne({ purchaser: user.email })
+      .sort({ purchase_dateTime: -1 })
+      .limit(1);
+    console.log(ticket);
 
     await sendEmailWithTicket(user.email, ticket);
     res.json(cart);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  }
-};
-
-const sendEmailWithTicket = async (email, ticket) => {
-  try {
-    const mailOptions = {
-      from: "Ecommerce - " + config.gmailAccount,
-      to: email,
-      subject: "Order Confirmation",
-      html: `<div>
-                <h1>Your Order Details</h1>
-                <p>Order ID: ${ticket._id}</p>
-                <p>Total Amount: ${ticket.amount}</p>
-                <p>Purchased Products:</p>
-                <ul>
-                  ${ticket.products
-                    .map(
-                      (product) =>
-                        `<li>ProductId: ${product.productId}, Quantity:${product.quantity}</li>`
-                    )
-                    .join("")}
-                </ul>
-            </div>`,
-    };
-
-    await transporter.sendMail(mailOptions);
-    logger.info("Order confirmation email sent to: " + email);
-  } catch (error) {
-    loger.warn("Error sending email:", error);
-    throw new Error("Error sending email: " + error.message);
   }
 };
