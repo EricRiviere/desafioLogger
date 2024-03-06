@@ -18,6 +18,7 @@ import usersRouter from "./routes/api/users.routes.js";
 import jwtRouter from "./routes/api/jwt.routes.js";
 import actionsRouter from "./routes/api/users.actions.routes.js";
 import loggerRouter from "./routes/api/logger.routes.js";
+import fakeUserRouter from "./routes/api/fakeUser.routes.js";
 
 //Assets imports:
 import { Server } from "socket.io";
@@ -101,6 +102,7 @@ app.use("/api/actions", actionsRouter);
 app.use("/api/email", emailRouter);
 app.use("/api/tickets", ticketRouter);
 app.use("/api/loggerTest", loggerRouter);
+app.use("/api/fakeUser", fakeUserRouter);
 
 //ViewRouter
 app.use("/", viewsRouter);
